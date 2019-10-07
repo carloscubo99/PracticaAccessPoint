@@ -9,6 +9,13 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class MainActivity extends AppCompatActivity {
     private static Context appContext;
 
@@ -23,6 +30,42 @@ public class MainActivity extends AppCompatActivity {
         if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
             Log.e("WIFI", wifiInfo.getSSID());
         }
+
+        consultaHTTP();
+
     }
+
+
+
+
+
+    public void consultaHTTP(){
+        //GET request
+        URL url = null;
+        try {
+            url = new URL("http://www.android.com/");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            try {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //readStream(in);
+        } finally {
+            urlConnection.disconnect();
+        }
+
+    }
+
+
 }
 
