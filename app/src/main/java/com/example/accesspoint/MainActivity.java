@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             //esto se lanza en el execute
             Log.e("--uva", "doInBackGround->ESTOY EN OTRO HILO");
+            consultaHTTP();
             return true;
         }
 
@@ -90,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             try {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                String res = readStream(in);
+                Log.e("--respuestaServidor", res);
+                //Toast.makeText(MainActivity.this, res, Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -100,6 +105,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*public String readString(InputStream input) throws IOException {
+        byte[] bytes = new byte[50];
+        input.read(bytes);
+        return new String(bytes);
+    }*/
+
+    public String readStream(InputStream is) {
+        try {
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            int i = is.read();
+            while(i != -1) {
+                bo.write(i);
+                i = is.read();
+            }
+            return bo.toString();
+        } catch (IOException e) {
+            return "";
+        }
+    }
 
 }
 
